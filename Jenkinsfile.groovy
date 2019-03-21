@@ -18,8 +18,14 @@ node{
         sh "scp -r * ec2-user@${IP}:/home/ec2-user/"
     }
     stage("Move files"){
+        try{
         sh "ssh ec2-user@${IP}  sudo mv /home/ec2-user/* /flaskex"
-    }
+        }
+        catch (exec){
+            sh "echo files/folder exists"
+        }
+    }:wq
+    
     stage("Install requirements"){
         sh "ssh ec2-user@${IP}     sudo pip install -r /flaskex/requirements.txt"
     }
