@@ -7,7 +7,12 @@ node{
         git 'git@github.com:florinen/Flaskex.git'
     }
     stage("Run App"){
-        sh "ssh ec2-user@${IP}  sudo mkdir /flaskex 2> /dev/null"
+        try{
+           sh "ssh ec2-user@${IP}  sudo mkdir /flaskex 2> /dev/null"
+        }
+        catch(exec){
+           sh "echo folder exists" 
+        }
     }
     stage("Copy files"){
         sh "scp -r * ec2-user@${IP}:/home/ec2-user/"
@@ -19,10 +24,10 @@ node{
         sh "ssh ec2-user@${IP}     sudo pip install -r /flaskex/requirements.txt"
     }
     stage("move service to /etc"){
-        sh " ec2-user@${IP}  sudo mv /flaskex/flaskex.service /etc/systemd/system"
+        sh "ssh ec2-user@${IP}  sudo mv /flaskex/flaskex.service /etc/systemd/system"
     }
     stage("Start service"){
-        sh "ec2-user@${IP}  sudo systemctl start flaskex"
+        sh "ssh ec2-user@${IP}  sudo systemctl start flaskex"
     }
     
 }
