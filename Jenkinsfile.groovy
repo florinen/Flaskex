@@ -24,8 +24,8 @@ node{
         catch (exec){
             sh "echo files/folder exists"
         }
-    }:wq
-    
+    }
+
     stage("Install requirements"){
         sh "ssh ec2-user@${IP}     sudo pip install -r /flaskex/requirements.txt"
     }
